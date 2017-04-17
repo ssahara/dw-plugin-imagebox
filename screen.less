@@ -1,0 +1,65 @@
+/*
+ * DokuWiki Plugin Imagebox
+ */
+/* Uncomment these lines to force the edit button show up bellow the imagebox. */
+/* div.dokuwiki div.secedit input.button{
+ * clear:both !important;
+ * }
+ */
+div.thumb2 {
+  margin-bottom: .5em;
+  width: auto;
+  background-color: transparent;
+  .thumbinner {
+    display: inline-block;
+    background-color: #F8F9FA;
+    margin: 2px;
+    border: 1px solid __border__;
+    padding: 3px;
+    font-size: 94%;
+    overflow: hidden;
+  }
+  .mediabox2 {
+    background: __background__ none repeat scroll 0 0;
+    margin: 0;
+    border: 1px solid __border__;
+  }
+  .magnify {
+    float: right;
+    a {
+      display: block;
+    }
+    img {
+      display: block;
+    }
+  }
+  .interwiki {
+    background-position: 0 center;
+    padding-left: 17px;
+  }
+  .thumbcaption {
+    border: none;
+    font-size: 94%;
+    line-height: 1.4em;
+    padding: 3px;
+    text-align: left;
+  }
+}
+div.trien {
+  margin: .5em 1.4em .8em 0;
+}
+div.tleft {
+  clear: left;
+  float: left;
+  margin: .5em 1.4em .8em 0;
+}
+div.tright {
+  clear: right;
+  float: right;
+  margin: .5em 0 .8em 1.4em;
+}
+div.tcenter {
+  clear: both;
+  text-align: center;
+  margin: .5em auto .8em auto;
+}
