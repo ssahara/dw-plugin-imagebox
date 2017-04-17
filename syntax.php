@@ -117,7 +117,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                     if ($m['detail']) {
                         $renderer->doc.= '<div class="magnify">';
                         $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$m['detail'].'">';
-                        $renderer->doc.= '<img width="15" height="11" alt="" src="'.DOKU_BASE.'lib/plugins/imagebox/magnify-clip.png"/>';
+                        $renderer->doc.= '<img width="15" height="11" alt="" src="'.DOKU_REL.'lib/plugins/imagebox/magnify-clip.png"/>';
                         $renderer->doc.= '</a></div>';
                     }
                     break;
