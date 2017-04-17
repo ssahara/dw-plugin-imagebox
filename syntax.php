@@ -101,45 +101,45 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
      * Create output
      */
     function render($format, Doku_Renderer $renderer, $data) {
-        if ($format == 'xhtml') {
-            list($state, $m) = $data;
 
-            switch ($state) {
-                case DOKU_LEXER_ENTER:
-                    $renderer->doc.= '<div class="thumb2 t'.$m['align'].'">';
-                    $renderer->doc.= '<div class="thumbinner">';
-                    if ($m['exist']) {
-                        $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);
-                    } else {
-                        $renderer->doc.= 'Invalid Link';
-                    }
-                    $renderer->doc.= '<div class="thumbcaption" style="max-width: '.($m['width']-6).'px">';
-                    if ($m['detail']) {
-                        $renderer->doc.= '<div class="magnify">';
-                        $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$m['detail'].'">';
-                        $renderer->doc.= '<img width="15" height="11" alt="" src="'.DOKU_REL.'lib/plugins/imagebox/magnify-clip.png"/>';
-                        $renderer->doc.= '</a></div>';
-                    }
-                    break;
+        if ($format !== 'xhtml') return false;
 
-                case DOKU_LEXER_UNMATCHED:
-                    $match = $m;
-                    $style=$this->getConf('default_caption_style');
-                    if ($style=='Italic') {
-                        $renderer->doc .= '<em>'.$renderer->_xmlEntities($match).'</em>';
-                    } elseif ($style=='Bold') {
-                        $renderer->doc .= '<strong>'.$renderer->_xmlEntities($match).'</strong>';
-                    } else {
-                        $renderer->doc .= $renderer->_xmlEntities($match);
-                    }
-                    break;
+        list($state, $m) = $data;
 
-                case DOKU_LEXER_EXIT:
-                    $renderer->doc.= '</div></div></div>';
-                    break;
-            }
-            return true;
+        switch ($state) {
+            case DOKU_LEXER_ENTER:
+                $renderer->doc.= '<div class="thumb2 t'.$m['align'].'">';
+                $renderer->doc.= '<div class="thumbinner">';
+                if ($m['exist']) {
+                    $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);
+                } else {
+                    $renderer->doc.= 'Invalid Link';
+                }
+                $renderer->doc.= '<div class="thumbcaption" style="max-width: '.($m['width']-6).'px">';
+                if ($m['detail']) {
+                    $renderer->doc.= '<div class="magnify">';
+                    $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$m['detail'].'">';
+                    $renderer->doc.= '<img width="15" height="11" alt="" src="'.DOKU_REL.'lib/plugins/imagebox/magnify-clip.png"/>';
+                    $renderer->doc.= '</a></div>';
+                }
+                break;
+
+            case DOKU_LEXER_UNMATCHED:
+                $match = $m;
+                $style=$this->getConf('default_caption_style');
+                if ($style=='Italic') {
+                    $renderer->doc .= '<em>'.$renderer->_xmlEntities($match).'</em>';
+                } elseif ($style=='Bold') {
+                    $renderer->doc .= '<strong>'.$renderer->_xmlEntities($match).'</strong>';
+                } else {
+                    $renderer->doc .= $renderer->_xmlEntities($match);
+                }
+                break;
+
+            case DOKU_LEXER_EXIT:
+                $renderer->doc.= '</div></div></div>';
+                break;
         }
-        return false;
+        return true;
     }
 }
