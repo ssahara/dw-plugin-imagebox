@@ -41,10 +41,13 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
         switch($state){
             case DOKU_LEXER_ENTER:
                 $m = Doku_Handler_Parse_Media(substr($match,3));
-                $m['w'] = $m['width'];
-                $dispMagnify = ($m['w'] || $m['height']) && $this->getConf('display_magnify')=='If necessary' || $this->getConf('display_magnify')=='Always';
+
+                $dispMagnify = ($m['width'] || $m['height'])
+                             && ($this->getConf('display_magnify') == 'If necessary')
+                             || ($this->getConf('display_magnify') == 'Always');
 
                 $gimgs = false;
+
                 list($src, $hash) = explode('#', $m['src'], 2);
 
                 if ($m['type'] == 'internalmedia') {
@@ -73,13 +76,14 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
                 $m['exist'] = ($gimgs !== false);
 
-                if (!$m['w'] && $m['exist']) {
+                if (!$m['width'] && $m['exist']) {
                     ($m['height'])?
-                    $m['w'] = $m['height'] * $gimgs[0]/$gimgs[1]:
+                    $m['h'] = $m['height'] * $gimgs[0]/$gimgs[1]:
                     $m['w'] = $gimgs[0];
                 }
-                $m['width'] = $m['w'];
-                $m['height'] = $m['h'];
+                if (isset($m['w'])) $m['width'] = $m['w'];
+                if (isset($m['h'])) $m['height'] = $m['h'];
+
                 if (!$m['align'] || $m['align']=='center' && !$this->getConf('center_align')) {
                     $m['align'] = 'rien';
                 }
