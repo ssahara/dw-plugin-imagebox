@@ -75,7 +75,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
                 $m['exist'] = ($gimgs !== false);
 
-                // get image width $m['width'], which required to decide thumbcaption width
+                // get image width $m['width'], which required to decide thumbinner width
                 if (!$m['width'] && $m['exist']) {
                     ($m['height'])?
                     $m['width'] = round($m['height'] * $gimgs[0]/$gimgs[1]):
@@ -128,13 +128,15 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
             case DOKU_LEXER_UNMATCHED:
                 $match = $m;
-                $style=$this->getConf('default_caption_style');
-                if ($style=='Italic') {
-                    $renderer->doc .= '<em>'.$renderer->_xmlEntities($match).'</em>';
-                } elseif ($style=='Bold') {
-                    $renderer->doc .= '<strong>'.$renderer->_xmlEntities($match).'</strong>';
-                } else {
-                    $renderer->doc .= $renderer->_xmlEntities($match);
+                switch ($this->getConf('default_caption_style')) {
+                    case 'Italic':
+                        $renderer->doc.= '<em>'.$renderer->_xmlEntities($match).'</em>';
+                        break;
+                    case 'Bold':
+                        $renderer->doc.= '<strong>'.$renderer->_xmlEntities($match).'</strong>';
+                        break;
+                    default:
+                        $renderer->doc.= $renderer->_xmlEntities($match);
                 }
                 break;
 
