@@ -42,11 +42,10 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
             case DOKU_LEXER_ENTER:
                 $m = Doku_Handler_Parse_Media(substr($match,3));
 
+                // check whether the click-enlarge icon is shown
                 $dispMagnify = ($m['width'] || $m['height'])
                              && ($this->getConf('display_magnify') == 'If necessary')
                              || ($this->getConf('display_magnify') == 'Always');
-
-                $gimgs = false;
 
                 list($src, $hash) = explode('#', $m['src'], 2);
 
@@ -62,7 +61,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                         }
                     }
 
-                    if ($exists) $gimgs = @getImageSize(mediaFN($src));
+                    $gimgs = $exists ? @getImageSize(mediaFN($src)) : false;
                 } else {
                     if ($dispMagnify) {
                         $m['detail'] = ml($src, array('cache'=>'cache'), false);
@@ -76,14 +75,14 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
                 $m['exist'] = ($gimgs !== false);
 
+                // get image width $m['width'], which required to decide thumbcaption width
                 if (!$m['width'] && $m['exist']) {
                     ($m['height'])?
-                    $m['h'] = $m['height'] * $gimgs[0]/$gimgs[1]:
-                    $m['w'] = $gimgs[0];
+                    $m['width'] = round($m['height'] * $gimgs[0]/$gimgs[1]):
+                    $m['width'] = $gimgs[0];
                 }
-                if (isset($m['w'])) $m['width'] = $m['w'];
-                if (isset($m['h'])) $m['height'] = $m['h'];
 
+                // imagebox alignment
                 if (!$m['align'] || $m['align']=='center' && !$this->getConf('center_align')) {
                     $m['align'] = 'rien';
                 }
