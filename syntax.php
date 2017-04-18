@@ -108,13 +108,13 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 $renderer->doc.= '<div class="thumb2 t'.$m['align'].'">';
-                $renderer->doc.= '<div class="thumbinner">';
                 if ($m['exist']) {
+                    $renderer->doc.= '<div class="thumbinner" style="width: '.($m['width']+2).'px;">';
                     $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= 'Invalid Link';
+                    $renderer->doc.= '<div class="thumbinner">';
+                    $renderer->doc.= '<div class="error">Invalid image</div>';
                 }
-                $renderer->doc.= '<div class="thumbcaption" style="max-width: '.($m['width']-6).'px">';
                 if ($m['detail']) {
                     $renderer->doc.= '<div class="magnify">';
                     $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$m['detail'].'">';
