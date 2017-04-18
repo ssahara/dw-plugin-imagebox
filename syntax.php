@@ -5,13 +5,18 @@
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  Lukas Rademacher <lukas@rademacher.ac>, FFTiger & myst6re
  *
- * Syntax for display an image with a caption, like Wikipedia.org
+ * display an image with a caption, like Wikipedia.org
+ *
+ * Example:
+ *     [{{wiki:dokuwiki-128.png|alternate text|caption or description}}]
  */
 if(!defined('DOKU_INC')) die();
 
 class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
+    protected $entry_pattern = '\[\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'.'(?=[^\}]*\}\}\])';
+    protected $exit_pattern  = '\}\}\]';
 
     function __construct() {
         $this->mode = substr(get_class($this), 7);
@@ -28,10 +33,10 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
      * Connect pattern to lexer
      */
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern('\[\{\{[^\|\}]+\|*(?=[^\}]*\}\}\])', $mode, $this->mode);
+        $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->mode);
     }
     function postConnect() {
-        $this->Lexer->addExitPattern('\}\}\]', $this->mode);
+        $this->Lexer->addExitPattern($this->exit_pattern, $this->mode);
     }
 
     /**
@@ -40,7 +45,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state){
             case DOKU_LEXER_ENTER:
-                $m = Doku_Handler_Parse_Media(substr($match,3));
+                $m = Doku_Handler_Parse_Media(substr(rtrim($match,'|'),3));
 
                 // check whether the click-enlarge icon is shown
                 $dispMagnify = ($m['width'] || $m['height'])
