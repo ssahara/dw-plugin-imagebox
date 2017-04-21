@@ -8,7 +8,7 @@
  * display an image with a caption, like Wikipedia.org
  *
  * Example:
- *     [{{wiki:dokuwiki-128.png|alternate text|caption or description}}]
+ *     [200px{{wiki:dokuwiki-128.png|alternate text|caption or description}}]
  */
 if(!defined('DOKU_INC')) die();
 
@@ -21,7 +21,8 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
         $this->mode = substr(get_class($this), 7);
 
         // match patterns
-        $this->pattern['entry'] = '\[\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
+        $this->pattern['entry'] = '\[(?:\d+(?:%|px|em))?'
+                                 .'\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
                                  .'(?=[^\}]*\}\}\])';
         $this->pattern['exit']  = '\}\}\]';
     }
@@ -49,7 +50,11 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state){
             case DOKU_LEXER_ENTER:
-                $m = Doku_Handler_Parse_Media(substr(rtrim($match,'|'),3));
+                list($size, $media) = explode('{{', $match, 2);
+
+                $m = Doku_Handler_Parse_Media(rtrim($media,'|'));
+
+                $m['size'] = substr($size, 1); // imagebox width with unit
 
                 // check whether the click-enlarge icon is shown
                 $dispMagnify = ($m['width'] || $m['height'])
@@ -115,13 +120,22 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
+                // imagebox width adjustment
+                if ($m['size']) {
+                    $width = $m['size'];
+                } elseif ($m['width']) {
+                    $width = ($m['width']+(1+3+1+2)*2).'px';
+                } else {
+                    $width = 'auto';
+                }
+                $renderer->doc.= '<div class="plugin_imagebox plugin_wrap wrap_'.$m['align']
+                                .'" style="width: '.$width.';">';
+                $renderer->doc.= '<div class="thumbinner">';
+
                 // picture image
-                $renderer->doc.= '<div class="plugin_imagebox plugin_wrap wrap_'.$m['align'].'">';
                 if ($m['exist']) {
-                    $renderer->doc.= '<div class="thumbinner" style="width: '.($m['width']+2).'px;">';
                     $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= '<div class="thumbinner">';
                     $renderer->doc.= '<div class="error">Invalid image</div>';
                 }
                 // image caption
