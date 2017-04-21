@@ -15,11 +15,15 @@ if(!defined('DOKU_INC')) die();
 class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
-    protected $entry_pattern = '\[\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'.'(?=[^\}]*\}\}\])';
-    protected $exit_pattern  = '\}\}\]';
+    protected $pattern;
 
     function __construct() {
         $this->mode = substr(get_class($this), 7);
+
+        // match patterns
+        $this->pattern['entry'] = '\[\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
+                                 .'(?=[^\}]*\}\}\])';
+        $this->pattern['exit']  = '\}\}\]';
     }
 
     function getType(){ return 'protected'; }
@@ -33,10 +37,10 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
      * Connect pattern to lexer
      */
     function connectTo($mode) {
-        $this->Lexer->addEntryPattern($this->entry_pattern, $mode, $this->mode);
+        $this->Lexer->addEntryPattern($this->pattern['entry'], $mode, $this->mode);
     }
     function postConnect() {
-        $this->Lexer->addExitPattern($this->exit_pattern, $this->mode);
+        $this->Lexer->addExitPattern($this->pattern['exit'], $this->mode);
     }
 
     /**
