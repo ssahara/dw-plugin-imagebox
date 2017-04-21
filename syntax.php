@@ -87,10 +87,9 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                     $m['width'] = $gimgs[0];
                 }
 
-                // imagebox alignment
-                if (!$m['align'] || $m['align']=='center' && !$this->getConf('center_align')) {
-                    $m['align'] = 'rien';
-                }
+                // imagebox alignment, requires relevant class of wrap plugin
+                if (!$m['align']) $m['align'] = 'noalign'; // wrap_noalign
+
                 return array($state, $m);
 
             case DOKU_LEXER_UNMATCHED:
@@ -113,7 +112,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 // picture image
-                $renderer->doc.= '<div class="thumb2 t'.$m['align'].'">';
+                $renderer->doc.= '<div class="plugin_imagebox plugin_wrap wrap_'.$m['align'].'">';
                 if ($m['exist']) {
                     $renderer->doc.= '<div class="thumbinner" style="width: '.($m['width']+2).'px;">';
                     $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);

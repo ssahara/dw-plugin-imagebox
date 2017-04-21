@@ -6,11 +6,13 @@
  * clear:both !important;
  * }
  */
-div.thumb2 {
+div.plugin_imagebox {
+  /* box-sizing: border-box;  // wrap_plugin  */
   margin-bottom: .5em;
   width: auto;
   background-color: transparent;
   .thumbinner {
+    box-sizing: content-box;
     background-color: #F8F9FA;
     margin: 2px;
     border: 1px solid __border__;
@@ -33,10 +35,6 @@ div.thumb2 {
       text-decoration: none;
     }
   }
-  .interwiki {
-    background-position: 0 center;
-    padding-left: 17px;
-  }
   .thumbcaption {
     border: none;
     font-size: 94%;
@@ -44,22 +42,4 @@ div.thumb2 {
     padding: 3px;
     text-align: left;
   }
-}
-div.trien {
-  margin: .5em 1.4em .8em 0;
-}
-div.tleft {
-  clear: left;
-  float: left;
-  margin: .5em 1.4em .8em 0;
-}
-div.tright {
-  clear: right;
-  float: right;
-  margin: .5em 0 .8em 1.4em;
-}
-div.tcenter {
-  clear: both;
-  text-align: center;
-  margin: .5em auto .8em auto;
 }
