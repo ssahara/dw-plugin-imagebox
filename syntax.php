@@ -3,9 +3,13 @@
  * DokuWiki Plugin Imagebox
  *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author  Lukas Rademacher <lukas@rademacher.ac>, FFTiger & myst6re
+ * @author  FFTiger <fftiger@wikisquare.com>
+ * @author  myst6re <myst6re@wikiaquare.com>
+ * @author  Lukas Rademacher <lukas@rademacher.ac>
+ * @author  Satoshi Sahara <sahara.satoshi@gmail.com>
  *
  * display an image with a caption, like Wikipedia.org
+ * note: require wrap plugin to support imagebox alignment
  *
  * Example:
  *     [200px{{wiki:dokuwiki-128.png|alternate text|caption or description}}]
