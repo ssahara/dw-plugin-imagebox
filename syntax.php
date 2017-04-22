@@ -56,35 +56,21 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
                 $m['size'] = substr($size, 1); // imagebox width with unit
 
-                // check whether the click-enlarge icon is shown
-                $dispMagnify = ($m['width'] || $m['height'])
-                             && ($this->getConf('display_magnify') == 'If necessary')
-                             || ($this->getConf('display_magnify') == 'Always');
-
                 list($src, $hash) = explode('#', $m['src'], 2);
 
                 if ($m['type'] == 'internalmedia') {
                     global $ID;
                     $exists = false;
                     resolve_mediaid(getNS($ID), $src, $exists);
-
-                    if ($dispMagnify) {
-                        $m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
-                        if ($hash) {
-                            $m['detail'] .= '#'.$hash;
-                        }
-                    }
-
+                    $m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
                     $gimgs = $exists ? @getImageSize(mediaFN($src)) : false;
                 } else {
-                    if ($dispMagnify) {
-                        $m['detail'] = ml($src, array('cache'=>'cache'), false);
-                        if ($hash) {
-                            $m['detail'] .= '#'.$hash;
-                        }
-                    }
-
+                    $m['detail'] = ml($src, array('cache'=>'cache'), false);
                     $gimgs = @getImageSize($src);
+                }
+
+                if ($hash) {
+                    $m['detail'] .= '#'.$hash;
                 }
 
                 $m['exist'] = ($gimgs !== false);
@@ -95,6 +81,22 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                     $m['width'] = round($m['height'] * $gimgs[0]/$gimgs[1]):
                     $m['width'] = $gimgs[0];
                 }
+
+                // check whether the click-enlarge icon is shown
+                if ($this->getConf('display_magnify') == 'Always') {
+                    $dispMagnify = true;
+                } elseif ($this->getConf('display_magnify') == 'If necessary') {
+                    // chcek linking option (linkonly|detail|nolink|direct)
+                    if (in_array($m['linking'],['nolink','linkonly','direct'])) {
+                        $dispMagnify = false;
+                    } else {
+                        // check image size is greater than display size
+                        $dispMagnify = ($gimgs[0] > $m['width']);
+                    }
+                } else {
+                    $dispMagnify = false;
+                }
+                if (!$dispMagnify) $m['detail'] = false;
 
                 // imagebox alignment, requires relevant class of wrap plugin
                 if (!$m['align']) $m['align'] = 'noalign'; // wrap_noalign
