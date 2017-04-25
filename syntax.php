@@ -87,18 +87,22 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                 }
 
                 // check whether the click-enlarge icon is shown
-                if ($this->getConf('display_magnify') == 'Always') {
-                    $dispMagnify = true;
-                } elseif ($this->getConf('display_magnify') == 'If necessary') {
-                    // chcek linking option (linkonly|detail|nolink|direct)
-                    if (in_array($m['linking'],['nolink','linkonly','direct'])) {
+                switch ($this->getConf('display_magnify')) {
+                    case 'Always':
+                        $dispMagnify = true;
+                        break;
+                    case 'Never':
                         $dispMagnify = false;
-                    } else {
-                        // check image size is greater than display size
-                        $dispMagnify = ($gimgs[0] > $m['width']);
-                    }
-                } else {
-                    $dispMagnify = false;
+                        break;
+                    case 'If necessary':
+                    default:
+                        // chcek linking option (linkonly|detail|nolink|direct)
+                        if (in_array($m['linking'],['nolink','linkonly','direct'])) {
+                            $dispMagnify = false;
+                        } else {
+                            // check image size is greater than display size
+                            $dispMagnify = ($gimgs[0] > $m['width']);
+                        }
                 }
                 if (!$dispMagnify) $m['detail'] = false;
 
