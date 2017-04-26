@@ -48,6 +48,44 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
         $this->Lexer->addExitPattern($this->pattern['exit'], $this->mode);
     }
 
+
+    /**
+     * extended getImageSize() that supports svg file
+     * 
+     * @param string $filename  local or remote file
+     * @return array that contains image size or false
+     */
+    protected function getImageSize($filename) {
+        if (substr($filename, -4) == '.svg') {
+            // OpenSSL changed in PHP 5.6.x
+            // All encrypted client streams now enable peer verification by default.
+            // allow self-signed ("snakeoil") certificates
+            $context = stream_context_create(array(
+                'ssl' => array('verify_peer' => false,'verify_peer_name' => false)
+            ));
+
+            $xml = @file_get_contents($filename, false, $context);
+            if ($xml === false) {
+                error_log('imagebox->getImageSize: file_get_contents failed for '.$filename);
+                return false;
+            }
+
+            $xmlObject = simplexml_load_string($xml);
+            if ($xmlObject === false) {
+                error_log('imagebox->getImageSize: xml parse failed');
+                return false;
+            }
+            $attr = $xmlObject->attributes();
+            $w = (string) $attr->width;
+            $h = (string) $attr->height;
+            $info = array($w,$h);
+        } else {
+            $info = @getImageSize($filename);
+        }
+        return $info;
+    }
+
+
     /**
      * handle syntax
      */
@@ -67,10 +105,10 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                     $exists = false;
                     resolve_mediaid(getNS($ID), $src, $exists);
                     $m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
-                    $gimgs = $exists ? @getImageSize(mediaFN($src)) : false;
+                    $gimgs = $exists ? $this->getImageSize(mediaFN($src)) : false;
                 } else {
                     $m['detail'] = ml($src, array('cache'=>'cache'), false);
-                    $gimgs = @getImageSize($src);
+                    $gimgs = $this->getImageSize($src);
                 }
 
                 if ($hash) {
