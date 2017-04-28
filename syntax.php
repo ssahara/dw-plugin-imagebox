@@ -1,6 +1,6 @@
 <?php
 /**
- * DokuWiki Plugin Imagebox
+ * DokuWiki Plugin Imagebox v2
  *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  FFTiger <fftiger@wikisquare.com>
@@ -16,7 +16,7 @@
  */
 if(!defined('DOKU_INC')) die();
 
-class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
     protected $pattern;
