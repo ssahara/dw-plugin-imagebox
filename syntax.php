@@ -99,23 +99,30 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                 $m['size'] = substr($size, 1); // imagebox width with unit
 
                 list($src, $hash) = explode('#', $m['src'], 2);
+                list($ext, $mime) = mimetype($src);
 
                 if ($m['type'] == 'internalmedia') {
                     global $ID;
                     $exists = false;
                     resolve_mediaid(getNS($ID), $src, $exists);
                     $m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
-                    $gimgs = $exists ? $this->getImageSize(mediaFN($src)) : false;
+                    $m['exist'] = $exists;
+                    if ($exists && substr($mime,0,5) == 'image') {
+                        $gimgs = $this->getImageSize(mediaFN($src));
+                    }
                 } else {
                     $m['detail'] = ml($src, array('cache'=>'cache'), false);
-                    $gimgs = $this->getImageSize($src);
+                    if (substr($mime,0,5) == 'image') {
+                        $gimgs = $this->getImageSize($src);
+                        $m['exist'] = ($gimgs !== false);
+                    } else {
+                        $m['exist'] = false;
+                    }
                 }
 
                 if ($hash) {
                     $m['detail'] .= '#'.$hash;
                 }
-
-                $m['exist'] = ($gimgs !== false);
 
                 // get image width $m['width'], which required to decide thumbinner width
                 if (!$m['width'] && $m['exist']) {
