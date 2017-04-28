@@ -1,7 +1,7 @@
-base   imagebox2
-author Satoshi Sahara, Lukas Rademacher, FFTiger & myst6re
-email  sahara.satoshi@gmail.com
-date   2017-04-28
-name   Imagebox v2 plugin
-desc   Display an image with a caption. Note: require wrap plugin for imagebox alignment
-url    https://github.com/ssahara/dw-plugin-imagebox/tree/dev2
+base   imagebox
+author Lukas Rademacher, FFTiger & myst6re
+email  lukas@rademacher.ac
+date   2016-11-22 + dev 2017-04-26
+name   Imagebox plugin
+desc   Display an image with a caption, like Wikipedia.org
+url    https://www.dokuwiki.org/plugin:imagebox
