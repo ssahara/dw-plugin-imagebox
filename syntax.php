@@ -25,7 +25,7 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
         $this->mode = substr(get_class($this), 7);
 
         // match patterns
-        $this->pattern['entry'] = '\[(?:\d+(?:%|px|em))?'
+        $this->pattern['entry'] = '\[(?:[\w ]+)?'
                                  .'\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
                                  .'(?=[^\}]*\}\}\])';
         $this->pattern['exit']  = '\}\}\]';
@@ -92,11 +92,23 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, Doku_Handler $handler) {
         switch($state){
             case DOKU_LEXER_ENTER:
-                list($size, $media) = explode('{{', $match, 2);
+                $m = array();
+                list($params, $media) = explode('{{', $match, 2);
 
-                $m = Doku_Handler_Parse_Media(rtrim($media,'|'));
+                // box params
+                $params = substr($params, 1);
+                if ($params && ($wrap = $this->loadHelper('wrap'))) {
+                    $attr = $wrap->getAttributes(trim($params));
+                    if (isset($attr['width'])) {
+                        $m['box_size'] = $attr['width']; // imagebox width with unit
+                    }
+                    if (isset($attr['class'])) {
+                        $m['box_style'] = str_replace('wrap_','',$attr['class']);
+                    }
+                }
 
-                $m['size'] = substr($size, 1); // imagebox width with unit
+                // media params
+                $m += Doku_Handler_Parse_Media(rtrim($media,'|'));
 
                 list($src, $hash) = explode('#', $m['src'], 2);
                 list($ext, $mime) = mimetype($src);
@@ -176,18 +188,18 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 // imaegbox style
-                $box_style = $this->getConf('default_box_style');
+                $boxStyle = (isset($m['box_style']))? $m['box_style'] : $this->getConf('default_box_style');
 
-                // imagebox width adjustment
-                if ($m['size']) {
-                    $width = $m['size'];
+                // imagebox is border-box model that includes content, padding and border
+                if ($m['box_size']) {
+                    $boxWidth = $m['box_size'];
                 } elseif ($m['width']) {
-                    $width = ($m['width']+(1+3+1+2)*2).'px';
+                    $boxWidth = ($m['width']+(1+3+1+2)*2).'px';
                 } else {
-                    $width = 'auto';
+                    $boxWidth = 'auto';
                 }
-                $renderer->doc.= '<div class="plugin_imagebox '.$box_style.' plugin_wrap wrap_'.$m['align']
-                                .'" style="width: '.$width.';">';
+                $renderer->doc.= '<div class="plugin_imagebox '.$boxStyle.' plugin_wrap wrap_'.$m['align']
+                                .'" style="width: '.$boxWidth.';">';
                 $renderer->doc.= '<div class="thumbinner">';
 
                 // picture image
