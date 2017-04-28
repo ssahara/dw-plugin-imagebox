@@ -1,0 +1,97 @@
+/*
+ * DokuWiki Plugin Imagebox v2
+ */
+/* Uncomment these lines to force the edit button show up bellow the imagebox. */
+/* div.dokuwiki div.secedit input.button{
+ * clear:both !important;
+ * }
+ */
+div.plugin_imagebox {
+  /* box-sizing: border-box;  // wrap_plugin  */
+  margin-bottom: .5em;
+  background-color: transparent;
+  .thumbinner {
+    box-sizing: content-box;
+    // background-color: #F8F9FA;
+    margin: 2px;
+    // border: 1px solid __border__;
+    border-width: 1px;
+    border-style: solid;
+    padding: 3px;
+    font-size: 94%;
+    overflow: hidden;
+  }
+  .mediabox {
+    background: __background__ none repeat scroll 0 0;
+    margin: 0;
+    // border: 1px solid __border__;
+    border-width: 1px;
+    border-style: solid;
+  }
+  .magnify {
+    float: right;
+    a {
+      display: block;
+      width: 15px;
+      height: 11px;
+      background-image: url("magnify-clip.png");
+      text-decoration: none;
+    }
+  }
+  .thumbcaption {
+    border: none;
+    font-size: 94%;
+    line-height: 1.4em;
+    padding: 3px;
+    text-align: left;
+  }
+}
+
+/* wikipedia like color taste */
+.imagebox {
+  //background-color: #FFF8FF !important; // very pale pink
+  .thumbinner {
+    background-color: #F8F9FA;
+    border-color: __border__;
+  }
+  .mediabox {
+    background-color: __background__;
+    border-color: __border__;
+  }
+}
+
+/* Single box */
+.imagebox1{
+  .thumbinner {
+    background-color: __background__;
+    border-color: __border__;
+  }
+  .mediabox {
+    background-color: transparent;
+    border-color: transparent;
+  }
+} 
+
+/* Double box, border around image */
+.imagebox2{
+  .thumbinner {
+    background-color: __background__;
+    border-color: __border__;
+  }
+  .mediabox {
+    background-color: __background__;
+    border-color: __border__;
+  }
+}
+
+/* zero box, no border lines */
+.imagebox0{
+  .thumbinner {
+    background-color: __background__;
+    border-color: transparent;
+  }
+  .mediabox {
+    background-color: transparent;
+    border-color: transparent;
+  }
+}

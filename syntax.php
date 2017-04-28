@@ -175,6 +175,9 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
+                // imaegbox style
+                $box_style = $this->getConf('default_box_style');
+
                 // imagebox width adjustment
                 if ($m['size']) {
                     $width = $m['size'];
@@ -183,7 +186,7 @@ class syntax_plugin_imagebox extends DokuWiki_Syntax_Plugin {
                 } else {
                     $width = 'auto';
                 }
-                $renderer->doc.= '<div class="plugin_imagebox plugin_wrap wrap_'.$m['align']
+                $renderer->doc.= '<div class="plugin_imagebox '.$box_style.' plugin_wrap wrap_'.$m['align']
                                 .'" style="width: '.$width.';">';
                 $renderer->doc.= '<div class="thumbinner">';
 
