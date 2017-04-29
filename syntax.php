@@ -108,6 +108,9 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                         $m['box_style'] = str_replace('wrap_','',$attr['class']);
                     }
                 }
+                if (!isset($m['box_style'])) {
+                    $m['box_style'] = $this->getConf('default_box_style');
+                }
 
                 // media params
                 $m += Doku_Handler_Parse_Media(rtrim($media,'|'));
@@ -119,14 +122,12 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                     global $ID;
                     $exists = false;
                     resolve_mediaid(getNS($ID), $src, $exists);
-                    //$m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
                     $m['src'] = ($hash) ? $src.'#'.$hash : $src;
                     $m['exist'] = $exists;
                     if ($exists && substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize(mediaFN($src));
                     }
                 } else {
-                    //$m['detail'] = ml($src, array('cache'=>'cache'), false);
                     if (substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize($src);
                         $m['exist'] = ($gimgs !== false);
@@ -134,10 +135,6 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                         $m['exist'] = false;
                     }
                 }
-
-                //if ($hash) {
-                //    $m['detail'] .= '#'.$hash;
-                //}
 
                 // get image width $m['width'], which required to decide thumbinner width
                 if (!$m['width'] && $m['exist']) {
@@ -149,23 +146,21 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                 // check whether the click-enlarge icon is shown
                 switch ($this->getConf('display_magnify')) {
                     case 'Always':
-                        $dispMagnify = true;
+                        $m['detail'] = true;
                         break;
                     case 'Never':
-                        $dispMagnify = false;
+                        $m['detail'] = false;
                         break;
                     case 'If necessary':
                     default:
                         // chcek linking option (linkonly|detail|nolink|direct)
                         if (in_array($m['linking'],['nolink','linkonly','direct'])) {
-                            $dispMagnify = false;
+                            $m['detail'] = false;
                         } else {
                             // check image size is greater than display size
-                            $dispMagnify = ($gimgs[0] > $m['width']);
+                            $m['detail'] = ($gimgs[0] > $m['width']);
                         }
                 }
-                //if (!$dispMagnify) $m['detail'] = false;
-                $m['detail'] = $dispMagnify;
 
                 // imagebox alignment, requires relevant class of wrap plugin
                 if (!$m['align']) $m['align'] = 'noalign'; // wrap_noalign
@@ -191,9 +186,6 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
 
         switch ($state) {
             case DOKU_LEXER_ENTER:
-                // imaegbox style
-                $boxStyle = isset($m['box_style']) ? $m['box_style'] : $this->getConf('default_box_style');
-
                 // imagebox is border-box model that includes content, padding and border
                 if ($m['box_size']) {
                     $boxWidth = $m['box_size'];
@@ -202,7 +194,7 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                 } else {
                     $boxWidth = 'auto';
                 }
-                $renderer->doc.= '<div class="plugin_imagebox '.$boxStyle.' plugin_wrap wrap_'.$m['align']
+                $renderer->doc.= '<div class="plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align']
                                 .'" style="width: '.$boxWidth.';">';
                 $renderer->doc.= '<div class="thumbinner">';
 
