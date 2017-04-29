@@ -136,11 +136,13 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                     }
                 }
 
-                // get image width $m['width'], which required to decide thumbinner width
-                if (!$m['width'] && $m['exist']) {
-                    ($m['height'])?
-                    $m['width'] = round($m['height'] * $gimgs[0]/$gimgs[1]):
-                    $m['width'] = $gimgs[0];
+                // set image width (if possible) for box width calculation
+                if (!$m['width']) {
+                    if ($m['height'] && $gimgs[1]) {
+                        $m['width'] = round($m['height'] * $gimgs[0]/$gimgs[1]);
+                    } elseif ($gimgs[0]) {
+                        $m['width'] = 1 * $gimgs[0];
+                    }
                 }
 
                 // check whether the click-enlarge icon is shown
