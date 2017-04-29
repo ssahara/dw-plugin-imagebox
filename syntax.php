@@ -12,7 +12,9 @@
  * note: require wrap plugin to support imagebox alignment
  *
  * Example:
- *     [200px{{wiki:dokuwiki-128.png|alternate text|caption or description}}]
+ *     [200px imaegbox1{{wiki:dokuwiki-128.png|
+ *     alternate text|caption or description
+ *     }}]
  */
 if(!defined('DOKU_INC')) die();
 
@@ -117,13 +119,14 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                     global $ID;
                     $exists = false;
                     resolve_mediaid(getNS($ID), $src, $exists);
-                    $m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
+                    //$m['detail'] = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
+                    $m['src'] = ($hash) ? $src.'#'.$hash : $src;
                     $m['exist'] = $exists;
                     if ($exists && substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize(mediaFN($src));
                     }
                 } else {
-                    $m['detail'] = ml($src, array('cache'=>'cache'), false);
+                    //$m['detail'] = ml($src, array('cache'=>'cache'), false);
                     if (substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize($src);
                         $m['exist'] = ($gimgs !== false);
@@ -132,9 +135,9 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                     }
                 }
 
-                if ($hash) {
-                    $m['detail'] .= '#'.$hash;
-                }
+                //if ($hash) {
+                //    $m['detail'] .= '#'.$hash;
+                //}
 
                 // get image width $m['width'], which required to decide thumbinner width
                 if (!$m['width'] && $m['exist']) {
@@ -161,7 +164,8 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
                             $dispMagnify = ($gimgs[0] > $m['width']);
                         }
                 }
-                if (!$dispMagnify) $m['detail'] = false;
+                //if (!$dispMagnify) $m['detail'] = false;
+                $m['detail'] = $dispMagnify;
 
                 // imagebox alignment, requires relevant class of wrap plugin
                 if (!$m['align']) $m['align'] = 'noalign'; // wrap_noalign
@@ -188,7 +192,7 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
         switch ($state) {
             case DOKU_LEXER_ENTER:
                 // imaegbox style
-                $boxStyle = (isset($m['box_style']))? $m['box_style'] : $this->getConf('default_box_style');
+                $boxStyle = isset($m['box_style']) ? $m['box_style'] : $this->getConf('default_box_style');
 
                 // imagebox is border-box model that includes content, padding and border
                 if ($m['box_size']) {
@@ -204,15 +208,24 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
 
                 // picture image
                 if ($m['exist']) {
-                    $renderer->{$m['type']}($m['src'],$m['title'],'box2',$m['width'],$m['height'],$m['cache'],$m['linking']);
+                    $renderer->{$m['type']}($m['src'],$m['title'],'box',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
                     $renderer->doc.= '<div class="error">Invalid image</div>';
                 }
                 // image caption
                 $renderer->doc.= '<div class="thumbcaption">';
                 if ($m['detail']) {
+                    list($src, $hash) = explode('#', $m['src'], 2);
+
+                    if ($m['type'] == 'internalmedia') {
+                        $url = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
+                    } else {
+                        $url = ml($src, array('cache'=>'cache'), false);
+                    }
+                    if ($hash) $url.= '#'.$hash;
+
                     $renderer->doc.= '<div class="magnify">';
-                    $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$m['detail'].'">';
+                    $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$url.'">';
                     $renderer->doc.= '</a></div>';
                 }
                 break;
