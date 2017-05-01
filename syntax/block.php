@@ -18,7 +18,7 @@
  */
 if(!defined('DOKU_INC')) die();
 
-class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
     protected $pattern;
