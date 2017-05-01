@@ -95,10 +95,10 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
         switch($state){
             case DOKU_LEXER_ENTER:
                 $m = array();
+                $match = substr($match, 1); // drop first char '[' or '{'
                 list($params, $media) = explode('{{', $match, 2);
 
                 // box params
-                $params = substr($params, 1);
                 if ($params && ($wrap = $this->loadHelper('wrap'))) {
                     $attr = $wrap->getAttributes(trim($params));
                     if (isset($attr['width'])) {
