@@ -181,7 +181,7 @@ class syntax_plugin_imagebox2 extends DokuWiki_Syntax_Plugin {
      * Create output
      */
     function render($format, Doku_Renderer $renderer, $data) {
-
+        global $ID;
         if ($format !== 'xhtml') return false;
 
         list($state, $m) = $data;
