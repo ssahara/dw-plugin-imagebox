@@ -1,6 +1,6 @@
 <?php
 /**
- * DokuWiki Plugin Imagebox v2 - block box mode
+ * DokuWiki Plugin Imagebox v2 - inline-block box mode
  *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  FFTiger <fftiger@wikisquare.com>
@@ -18,7 +18,7 @@
  */
 if(!defined('DOKU_INC')) die();
 
-class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
+class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
     protected $pattern;
@@ -27,18 +27,20 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
         $this->mode = substr(get_class($this), 7);
 
         // match patterns
-        $this->pattern['entry'] = '\[(?:[\w ]+)?'
+        $this->pattern['entry'] = '\{(?:[\w ]+)?'
                                  .'\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
-                                 .'(?=[^\}]*\}\}\])';
-        $this->pattern['exit']  = '\}\}\]';
+                                 .'(?=[^\}]*\}\}\})';
+        $this->pattern['exit']  = '\}\}\}';
     }
 
     function getType(){ return 'protected'; }
+
     function getAllowedTypes() {
         return array('substition','protected','disabled','formatting');
     }
+
     function getSort(){ return 315; }
-    function getPType(){ return 'block'; }
+    function getPType(){ return 'normal'; }
 
     /**
      * Connect pattern to lexer
@@ -182,6 +184,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
      */
     function render($format, Doku_Renderer $renderer, $data) {
         global $ID;
+
         if ($format !== 'xhtml') return false;
 
         list($state, $m) = $data;
@@ -196,9 +199,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 } else {
                     $boxWidth = 'auto';
                 }
-                $renderer->doc.= '<div class="plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align']
+                $renderer->doc.= '<span class="plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align']
                                 .'" style="width: '.$boxWidth.';">';
-                $renderer->doc.= '<div class="thumbinner">';
+                $renderer->doc.= '<span class="thumbinner">';
 
                 // picture image
                 if ($m['exist']) {
@@ -207,7 +210,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     $renderer->doc.= '<div class="error">Invalid image</div>';
                 }
                 // image caption
-                $renderer->doc.= '<div class="thumbcaption">';
+                $renderer->doc.= '<span class="thumbcaption">';
                 if ($m['detail']) {
                     list($src, $hash) = explode('#', $m['src'], 2);
 
@@ -218,9 +221,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     }
                     if ($hash) $url.= '#'.$hash;
 
-                    $renderer->doc.= '<div class="magnify">';
+                    $renderer->doc.= '<span class="magnify">';
                     $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$url.'">';
-                    $renderer->doc.= '</a></div>';
+                    $renderer->doc.= '</a></span>';
                 }
                 break;
 
@@ -239,7 +242,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 break;
 
             case DOKU_LEXER_EXIT:
-                $renderer->doc.= '</div></div></div>';
+                $renderer->doc.= '</span></span></span>';
                 break;
         }
         return true;
