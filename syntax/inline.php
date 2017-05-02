@@ -28,7 +28,7 @@ class syntax_plugin_imagebox2_inline extends syntax_plugin_imagebox2_block {
         $this->mode = substr(get_class($this), 7);
 
         // match patterns
-        $this->pattern['entry'] = '\{(?:[\w ]+)?'
+        $this->pattern['entry'] = '\{(?:[\w% ]+)?'
                                  .'\{\{[^\|\}]+(?:(?:\|[^\|\[\]\{\}]*?)?\|)?'
                                  .'(?=[^\}]*\}\}\})';
         $this->pattern['exit']  = '\}\}\}';
