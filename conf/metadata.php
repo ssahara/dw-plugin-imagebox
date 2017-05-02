@@ -1,5 +1,5 @@
 <?php
-$meta['display_magnify'] = array('multichoice','_choices' => array(
+$meta['details_icon'] = array('multichoice','_choices' => array(
         'If necessary',
         'Always',
         'Never',

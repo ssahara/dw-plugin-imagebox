@@ -147,23 +147,27 @@ class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
                     }
                 }
 
-                // check whether the click-enlarge icon is shown
-                switch ($this->getConf('display_magnify')) {
-                    case 'Always':
-                        $m['detail'] = true;
-                        break;
-                    case 'Never':
-                        $m['detail'] = false;
-                        break;
-                    case 'If necessary':
-                    default:
-                        // chcek linking option (linkonly|detail|nolink|direct)
-                        if (in_array($m['linking'],['nolink','linkonly','direct'])) {
+                // check whether show details icon is shown
+                if ($m['type'] == 'internalmedia') {
+                    switch ($this->getConf('details_icon')) {
+                        case 'Always':
+                            $m['detail'] = true;
+                            break;
+                        case 'Never':
                             $m['detail'] = false;
-                        } else {
-                            // check image size is greater than display size
-                            $m['detail'] = ($gimgs[0] > $m['width']);
-                        }
+                            break;
+                        case 'If necessary':
+                        default:
+                            // chcek linking option (linkonly|details|nolink|direct)
+                            $m['detail'] = ($m['linking'] == 'details');
+                    }
+                } else {
+                    $m['detail'] = false;
+                }
+
+                // direct image link if show details icon is shown
+                if ($m['detail'] && $m['linking'] == 'details') {
+                    $m['linking'] = 'direct';
                 }
 
                 // imagebox alignment, requires relevant class of wrap plugin
@@ -183,7 +187,7 @@ class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
      * Create output
      */
     function render($format, Doku_Renderer $renderer, $data) {
-        global $ID;
+        global $ID, $lang;
 
         if ($format !== 'xhtml') return false;
 
@@ -216,14 +220,15 @@ class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
                     list($src, $hash) = explode('#', $m['src'], 2);
 
                     if ($m['type'] == 'internalmedia') {
-                        $url = ml($src,array('id'=>$ID,'cache'=>$m['cache']),($m['linking']=='direct'));
+                        // link to detail page
+                        $url = ml($src, array('id'=>$ID,'cache'=>$m['cache']), false);
                     } else {
                         $url = ml($src, array('cache'=>'cache'), false);
                     }
                     if ($hash) $url.= '#'.$hash;
 
                     $renderer->doc.= '<span class="magnify">';
-                    $renderer->doc.= '<a class="internal" title="'.$this->getLang('enlarge').'" href="'.$url.'">';
+                    $renderer->doc.= '<a  title="'.$this->getLang('enlarge').'" href="'.$url.'">';
                     $renderer->doc.= '</a></span>';
                 }
                 break;
