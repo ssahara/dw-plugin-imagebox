@@ -212,7 +212,7 @@ class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
                 if ($m['exist']) {
                     $renderer->{$m['type']}($m['src'],$m['title'],'box',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= '<span class="error">Invalid image</span>';
+                    $renderer->doc.= '<span class="error">'.$this->getLang('err_invalid').'</span>';
                 }
                 // image caption
                 $renderer->doc.= '<span class="thumbcaption">';

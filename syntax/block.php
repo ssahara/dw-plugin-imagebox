@@ -210,7 +210,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 if ($m['exist']) {
                     $renderer->{$m['type']}($m['src'],$m['title'],'box',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= '<div class="error">Invalid image</div>';
+                    $renderer->doc.= '<div class="error">'.$this->getLang('err_invalid').'</div>';
                 }
                 // image caption
                 $renderer->doc.= '<div class="thumbcaption">';

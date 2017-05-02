@@ -1,2 +1,2 @@
 <?php
-$lang['enlarge'] = 'Enlarge';
+$lang['err_invalid'] = 'Invalid image';
