@@ -199,15 +199,16 @@ class syntax_plugin_imagebox2_inline extends DokuWiki_Syntax_Plugin {
                 } else {
                     $boxWidth = 'auto';
                 }
-                $renderer->doc.= '<span class="plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align']
-                                .'" style="width: '.$boxWidth.';">';
+                $p['class'] = 'plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align'];
+                $p['style'] = 'width: '.$boxWidth.';';
+                $renderer->doc.= '<span '.buildAttributes($p).'>';
                 $renderer->doc.= '<span class="thumbinner">';
 
                 // picture image
                 if ($m['exist']) {
                     $renderer->{$m['type']}($m['src'],$m['title'],'box',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= '<div class="error">Invalid image</div>';
+                    $renderer->doc.= '<span class="error">Invalid image</span>';
                 }
                 // image caption
                 $renderer->doc.= '<span class="thumbcaption">';

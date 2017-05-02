@@ -196,8 +196,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 } else {
                     $boxWidth = 'auto';
                 }
-                $renderer->doc.= '<div class="plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align']
-                                .'" style="width: '.$boxWidth.';">';
+                $p['class'] = 'plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align'];
+                $p['style'] = 'width: '.$boxWidth.';';
+                $renderer->doc.= '<div '.buildAttributes($p).'>';
                 $renderer->doc.= '<div class="thumbinner">';
 
                 // picture image
