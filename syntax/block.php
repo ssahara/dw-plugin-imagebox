@@ -22,6 +22,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
 
     protected $mode;
     protected $pattern;
+    protected $tag = 'div'; // used in render()
 
     function __construct() {
         $this->mode = substr(get_class($this), 7);
@@ -187,6 +188,8 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
     function render($format, Doku_Renderer $renderer, $data) {
         global $ID, $lang;
 
+        $div = $this->tag; // div or span
+
         if ($format !== 'xhtml') return false;
 
         list($state, $m) = $data;
@@ -203,17 +206,17 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 }
                 $p['class'] = 'plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align'];
                 $p['style'] = 'width: '.$boxWidth.';';
-                $renderer->doc.= '<div '.buildAttributes($p).'>';
-                $renderer->doc.= '<div class="thumbinner">';
+                $renderer->doc.= "<$div ".buildAttributes($p).'>';
+                $renderer->doc.= "<$div ".'class="thumbinner">';
 
                 // picture image
                 if ($m['exist']) {
                     $renderer->{$m['type']}($m['src'],$m['title'],'box',$m['width'],$m['height'],$m['cache'],$m['linking']);
                 } else {
-                    $renderer->doc.= '<div class="error">'.$this->getLang('err_invalid').'</div>';
+                    $renderer->doc.= "<$div ".'class="error">'.$this->getLang('err_invalid')."</$div>";
                 }
                 // image caption
-                $renderer->doc.= '<div class="thumbcaption">';
+                $renderer->doc.= "<$div ".'class="thumbcaption">';
                 if ($m['detail']) {
                     list($src, $hash) = explode('#', $m['src'], 2);
 
@@ -225,9 +228,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     }
                     if ($hash) $url.= '#'.$hash;
 
-                    $renderer->doc.= '<div class="magnify">';
+                    $renderer->doc.= "<$div ".'class="magnify">';
                     $renderer->doc.= '<a title="'.$lang['media_viewtab'].'" href="'.$url.'">';
-                    $renderer->doc.= '</a></div>';
+                    $renderer->doc.= '</a>'."</$div>";
                 }
                 break;
 
@@ -246,7 +249,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 break;
 
             case DOKU_LEXER_EXIT:
-                $renderer->doc.= '</div></div></div>';
+                $renderer->doc.= "</$div>"."</$div>"."</$div>";
                 break;
         }
         return true;
