@@ -128,6 +128,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     if ($exists && substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize(mediaFN($src));
                     }
+                    $m['title'] = @$m['title'] ?: noNS($src);
                 } else {
                     if (substr($mime,0,5) == 'image') {
                         $gimgs = $this->getImageSize($src);
@@ -135,6 +136,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     } else {
                         $m['exist'] = false;
                     }
+                    $m['title'] = @$m['title'] ?: utf8_basename($src);
                 }
 
                 // set image width (if possible) for box width calculation
