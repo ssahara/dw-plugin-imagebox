@@ -9,13 +9,13 @@
  span.plugin_imagebox {
    display: inline-block;
    vertical-align: middle;
-   .thumbinner {
+   .innerbox {
      display: block;
    }
   .button {
     display: block;
   }
-  .thumbcaption {
+  .caption {
     display: block;
   }
    .error { // @see lib/styles/screen.css
@@ -34,7 +34,7 @@
   /* box-sizing: border-box;  // wrap_plugin  */
   margin-bottom: .5em;
   background-color: transparent;
-  .thumbinner {
+  .innerbox {
     box-sizing: content-box;
     // background-color: #F8F9FA;
     margin: 2px;
@@ -62,7 +62,7 @@
       text-decoration: none;
     }
   }
-  .thumbcaption {
+  .caption {
     border: none;
     font-size: 94%;
     line-height: 1.4em;
@@ -74,7 +74,7 @@
 /* wikipedia like color taste */
 .imagebox {
   //background-color: #FFF8FF !important; // very pale pink
-  .thumbinner {
+  .innerbox {
     background-color: #F8F9FA;
     border-color: __border__;
     .mediabox {
@@ -86,7 +86,7 @@
 
 /* Single box, border around whole box */
 .imagebox1 {
-  .thumbinner {
+  .innerbox {
     background-color: __background__;
     border-color: __border__;
     .mediabox {
@@ -96,7 +96,7 @@
   }
 } 
 .imagebox1b {
-  .thumbinner {
+  .innerbox {
     background-color: #F8F9FA;
     border-color: __border__;
     .mediabox {
@@ -108,7 +108,7 @@
 
 /* Double box, border around whole box and image */
 .imagebox2 {
-  .thumbinner {
+  .innerbox {
     background-color: __background__;
     border-color: __border__;
     .mediabox {
@@ -118,7 +118,7 @@
   }
 }
 .imagebox2b {
-  .thumbinner {
+  .innerbox {
     background-color: #F8F9FA;
     border-color: __border__;
     .mediabox {
@@ -130,7 +130,7 @@
 
 /* zero box, no border lines */
 .imagebox0 {
-  .thumbinner {
+  .innerbox {
     background-color: __background__;
     border-color: transparent;
     .mediabox {

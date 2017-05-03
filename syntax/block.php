@@ -209,7 +209,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 $p['class'] = 'plugin_imagebox '.$m['box_style'].' plugin_wrap wrap_'.$m['align'];
                 $p['style'] = 'width: '.$boxWidth.';';
                 $renderer->doc.= "<$div ".buildAttributes($p).'>';
-                $renderer->doc.= "<$div ".'class="thumbinner">';
+                $renderer->doc.= "<$div ".'class="innerbox">';
 
                 // picture image
                 if ($m['exist']) {
@@ -218,7 +218,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     $renderer->doc.= "<$div ".'class="error">'.$this->getLang('err_invalid')."</$div>";
                 }
                 // image caption
-                $renderer->doc.= "<$div ".'class="thumbcaption">';
+                $renderer->doc.= "<$div ".'class="caption">';
                 if ($m['detail']) {
                     // button for details page
                     list($src, $hash) = explode('#', $m['src'], 2);
