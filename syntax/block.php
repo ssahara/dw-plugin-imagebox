@@ -148,9 +148,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     }
                 }
 
-                // check whether show details icon is shown
+                // check whether show details button is shown
                 if ($m['type'] == 'internalmedia') {
-                    switch ($this->getConf('details_icon')) {
+                    switch ($this->getConf('details_button')) {
                         case 'Always':
                             $m['detail'] = true;
                             break;
@@ -220,6 +220,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 // image caption
                 $renderer->doc.= "<$div ".'class="thumbcaption">';
                 if ($m['detail']) {
+                    // button for details page
                     list($src, $hash) = explode('#', $m['src'], 2);
 
                     if ($m['type'] == 'internalmedia') {
@@ -230,7 +231,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     }
                     if ($hash) $url.= '#'.$hash;
 
-                    $renderer->doc.= "<$div ".'class="magnify">';
+                    $renderer->doc.= "<$div ".'class="button">';
                     $renderer->doc.= '<a title="'.$lang['media_viewtab'].'" href="'.$url.'">';
                     $renderer->doc.= '</a>'."</$div>";
                 }

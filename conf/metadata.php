@@ -1,5 +1,5 @@
 <?php
-$meta['details_icon'] = array('multichoice','_choices' => array(
+$meta['details_button'] = array('multichoice','_choices' => array(
         'If necessary',
         'Always',
         'Never',
