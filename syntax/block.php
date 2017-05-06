@@ -217,12 +217,10 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 } else {
                     $renderer->doc.= "<$div ".'class="error">'.$this->getLang('err_invalid')."</$div>";
                 }
-                // image caption
-                $renderer->doc.= "<$div ".'class="caption">';
-                if ($m['detail']) {
-                    // button for details page
-                    list($src, $hash) = explode('#', $m['src'], 2);
 
+                // button to details page
+                if ($m['detail']) {
+                    list($src, $hash) = explode('#', $m['src'], 2);
                     if ($m['type'] == 'internalmedia') {
                         // link to detail page
                         $url = ml($src, array('id'=>$ID,'cache'=>$m['cache']), false);
@@ -235,6 +233,9 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                     $renderer->doc.= '<a title="'.$lang['media_viewtab'].'" href="'.$url.'">';
                     $renderer->doc.= '</a>'."</$div>";
                 }
+
+                // image caption
+                $renderer->doc.= "<$div ".'class="caption">';
                 break;
 
             case DOKU_LEXER_UNMATCHED:
