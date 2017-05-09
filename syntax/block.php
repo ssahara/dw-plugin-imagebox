@@ -177,7 +177,8 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 return array($state, $m);
 
             case DOKU_LEXER_UNMATCHED:
-                return array($state, $match);
+                $handler->_addCall('cdata', array($match), $pos);
+                return false;
 
             case DOKU_LEXER_EXIT:
                 return array($state, '');
@@ -236,26 +237,24 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
 
                 // image caption
                 $renderer->doc.= "<$div ".'class="caption">';
-                break;
-
-            case DOKU_LEXER_UNMATCHED:
-                $match = $m;
-                switch ($this->getConf('default_caption_style')) {
-                    case 'Italic':
-                        $renderer->doc.= '<em>'.$renderer->_xmlEntities($match).'</em>';
-                        break;
-                    case 'Bold':
-                        $renderer->doc.= '<strong>'.$renderer->_xmlEntities($match).'</strong>';
-                        break;
-                    default:
-                        $renderer->doc.= $renderer->_xmlEntities($match);
-                }
+                $renderer->doc.= $this->_caption_style($state);
                 break;
 
             case DOKU_LEXER_EXIT:
+                $renderer->doc.= $this->_caption_style($state);
                 $renderer->doc.= "</$div>"."</$div>"."</$div>";
                 break;
         }
         return true;
     }
+
+    private function _caption_style($state) {
+        switch ($this->getConf('default_caption_style')) {
+            case 'Normal':  return '';
+            case 'Italic':  $tag.= 'em';     break;
+            case 'Bold':    $tag.= 'strong'; break;
+        }
+        return '<'.(($state == DOKU_LEXER_EXIT) ? '/' : '').$tag.'>';
+    }
+
 }
