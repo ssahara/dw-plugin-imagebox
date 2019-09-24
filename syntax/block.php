@@ -177,7 +177,7 @@ class syntax_plugin_imagebox2_block extends DokuWiki_Syntax_Plugin {
                 return array($state, $m);
 
             case DOKU_LEXER_UNMATCHED:
-                $handler->_addCall('cdata', array($match), $pos);
+                $handler->base($match, $state, $pos);
                 return false;
 
             case DOKU_LEXER_EXIT:
